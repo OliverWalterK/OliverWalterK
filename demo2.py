@@ -1,4 +1,3 @@
-from typing_extensions import Self
 import scraper2
 
 bot = scraper2.Scraper('https://ftx.com/markets')

@@ -17,8 +17,7 @@ class Scraper:
         self.driver.get(self.url)
     
     def find_all_links(self):
-        '''Finds elements on website with //a[@href]
-        and compiles a list called (all_url)'''
+        '''Finds elements on website with //a[@href] and compiles a list called (all_url)'''
         all_url = []
         try:
             WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//a[@href]")))
@@ -31,7 +30,6 @@ class Scraper:
 
     def valid_links(self, all_url):
         '''Aims to clean the list (all_url) and get the relevant links (valid_url)'''
-        self.all_url = all_url
         valid_url = []
         for i in all_url:
             if "trade" and "-" in i:
@@ -39,3 +37,6 @@ class Scraper:
         del valid_url[-5:]
         del valid_url[:2]
         return valid_url
+
+    def get_data(self):
+        
