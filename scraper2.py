@@ -6,7 +6,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
-import time, uuid, urllib, os, requests
+import pandas as pd
+import urllib.request
+import time, uuid, urllib, os, requests, json
 
 class Scraper:
     def __init__(self, url, options=None):
@@ -22,7 +24,7 @@ class Scraper:
         self.all_url = []
         try:
             WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, "//a[@href]")))
-            loop = self.driver.find_elements_by_xpath("//a[@href]")
+            loop = self.driver.find_elements(By. XPATH, "//a[@href]")
             for links in loop:
                 self.all_url.append(links.get_attribute("href"))
         except:
@@ -40,29 +42,44 @@ class Scraper:
         return self.valid_url
 
     def get_data(self):
-        '''This method will get data such as price,name,link,uuid and create a dictionary.'''
-        dictionary = {
+        '''This method will get price,name,link,uuid and pictures.'''
+        self.dictionary = {
                     'UUID':[],
                     'Link':[],
                     'Name':[],
                     'Price':[]
-                    }
-        for links in self.valid_url:
+                          }
+        # url_list = []
+        for links in self.valid_url[:5]:
             self.driver.get(links)
             time.sleep(2)
             try:
-                value = self.driver.find_element(By.XPATH, "/html/body/div[1]/div/div[2]/div/main/div[3]/div[3]/div/div/div/span[1]/p[2]").text
-                dictionary['Price'].append(value)
+                value = self.driver.find_element(By.XPATH, '/html/body/div[1]/div/div[2]/div/main/div[3]/div[3]/div/div/div/span[1]/p[2]').text
+                self.dictionary['Price'].append(value)
             except NoSuchElementException:
-                dictionary['Price'].append('N/A')
+                self.dictionary['Price'].append('N/A')
             try:
-                dictionary['Link'].append(links)
+                self.dictionary['Link'].append(links)
             except NoSuchElementException:
-                dictionary['Link'].append('N/A')
+                self.dictionary['Link'].append('N/A')
             try:
                 splitted = links.split("/")[-1]
-                dictionary['Name'].append(splitted)
+                self.dictionary['Name'].append(splitted)
             except NoSuchElementException:
-                dictionary['Name'].append('N/A')
+                self.dictionary['Name'].append('N/A')
+            # try:
+            #     find_picture_links = self.driver.find_elements(By. XPATH, "//img[@src]")
+            #     for picture in find_picture_links:
+            #         url_list.append(picture.get_attribute("src"))
+            #     for url in url_list:
+            #         r = requests.get(url)
+            #         with open('/home/oliver/Desktop/AiCore/Application2/attempt2/raw_data/picture.jpg', 'wb+') as ex:
+            #             ex.write(r.content)
+            # except NoSuchElementException:
+            #     print("No pictures were found.")
             links = str(uuid.uuid4())
-            dictionary['UUID'].append(links)
+            self.dictionary['UUID'].append(links)
+
+    def make_json(self):
+        with open('/home/oliver/Desktop/AiCore/Application2/attempt2/raw_data/data.json', 'w') as fp:
+            json.dump(self.dictionary, fp)
