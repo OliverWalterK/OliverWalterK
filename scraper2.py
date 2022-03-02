@@ -7,7 +7,6 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 import pandas as pd
-import urllib.request
 import time, uuid, urllib, os, requests, json
 
 class Scraper:
@@ -17,6 +16,7 @@ class Scraper:
             self.driver = Chrome(ChromeDriverManager().install(), options=options)
         else:
             self.driver = Chrome(ChromeDriverManager().install())
+        self.driver.maximize_window()
         self.driver.get(self.url)
     
     def find_all_links(self):
@@ -48,9 +48,11 @@ class Scraper:
                     'Link':[],
                     'Name':[],
                     'Price':[]
-                          }
-        # url_list = []
-        for links in self.valid_url[:5]:
+                          } 
+        if not os.path.exists('/home/oliver/Desktop/AiCore/Application2/attempt2/raw_data/screenshots'):
+            os.makedirs('/home/oliver/Desktop/AiCore/Application2/attempt2/raw_data/screenshots')
+
+        for links in self.valid_url:
             self.driver.get(links)
             time.sleep(2)
             try:
@@ -67,19 +69,21 @@ class Scraper:
                 self.dictionary['Name'].append(splitted)
             except NoSuchElementException:
                 self.dictionary['Name'].append('N/A')
-            # try:
-            #     find_picture_links = self.driver.find_elements(By. XPATH, "//img[@src]")
-            #     for picture in find_picture_links:
-            #         url_list.append(picture.get_attribute("src"))
-            #     for url in url_list:
-            #         r = requests.get(url)
-            #         with open('/home/oliver/Desktop/AiCore/Application2/attempt2/raw_data/picture.jpg', 'wb+') as ex:
-            #             ex.write(r.content)
-            # except NoSuchElementException:
-            #     print("No pictures were found.")
+            try:
+                self.driver.save_screenshot(f'/home/oliver/Desktop/AiCore/Application2/attempt2/raw_data/screenshots/{splitted}.png')
+            except NoSuchElementException:
+                print("No pictures were found.")
             links = str(uuid.uuid4())
             self.dictionary['UUID'].append(links)
 
     def make_json(self):
         with open('/home/oliver/Desktop/AiCore/Application2/attempt2/raw_data/data.json', 'w') as fp:
             json.dump(self.dictionary, fp)
+
+if __name__ == '__main__':
+    bot = Scraper()
+
+    #unittest is there to compare the expected results from now ( which are the results we get) with results we might be getting tomorrow or in the future. 
+    #it gives us a way to let us know when something has changed in the script or output. 
+    #one example I am already facing is that the order of crypto has changed. This means that if I order everything alphabetically, then I can circumvent the problem.
+    #making my code more robust!
