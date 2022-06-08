@@ -1,6 +1,6 @@
 ### Hello/Hallo/Bonjour/Hola, I'm Oliver 👋
 
-Here are some ideas to get you started:
+Completed a BEng in Sustainable Energy Engineering and a MSc in Renwable Energy Engineering. Only a sustainable future is a stable future.
 
 - 🌱 I’m currently learning about machine learning and how to implement it.
 - 🤔 I’m always looking for help with improving my code or learning something new.
