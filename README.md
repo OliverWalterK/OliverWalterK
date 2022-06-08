@@ -1,6 +1,6 @@
 ### Hello/Hallo/Bonjour/Hola, I'm Oliver 👋
 
-Completed a BEng in Sustainable Energy Engineering and a MSc in Renwable Energy Engineering. Sustainability is the only way forward. Very interested in big data and the idea of extracting information out of a sea of data.
+Completed a BEng in Sustainable Energy Engineering and a MSc in Renwable Energy Engineering. Sustainability is the only way forward. Very interested in big data and machine learning.
 
 - 🌱 I’m currently learning about machine learning and how to implement it.
 - 🤔 I’m always looking for help with improving my code or learning something new.
